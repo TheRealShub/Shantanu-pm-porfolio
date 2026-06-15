@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NOC Incident Dashboard — Redesign Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0F14;
+    --panel: #121822;
+    --panel-2: #161D29;
+    --line: #232C3A;
+    --text: #E6EAF0;
+    --text-dim: #8A96A8;
+    --text-faint: #5C6779;
+
+    --tier-action: #E5484D;
+    --tier-action-bg: rgba(229,72,77,0.10);
+    --tier-monitor: #F2A33D;
+    --tier-monitor-bg: rgba(242,163,61,0.10);
+    --tier-noise: #4D5C70;
+    --tier-noise-bg: rgba(77,92,112,0.18);
+
+    --accent: #4F8CFF;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono{ font-family: 'JetBrains Mono', monospace; }
+
+  /* ===== Annotation banner ===== */
+  .banner{
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .banner h1{
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .banner p{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .banner .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid rgba(79,140,255,0.35);
+    background: rgba(79,140,255,0.08);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* ===== Top bar ===== */
+  .topbar{
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display:flex;
+    align-items:center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .topbar .brand{
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .brand .dot{
+    width:8px; height:8px; border-radius:50%;
+    background: var(--tier-action);
+    box-shadow: 0 0 0 4px var(--tier-action-bg);
+  }
+  .filters{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+  .chip{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 12px;
+    display:flex; align-items:center; gap:6px;
+    cursor: default;
+  }
+  .chip.active{
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(79,140,255,0.08);
+  }
+  .chip .arrow{ font-size:10px; opacity:0.6; }
+
+  .counters{
+    display:flex;
+    gap: 10px;
+  }
+  .counter{
+    border-radius: 6px;
+    padding: 6px 14px;
+    text-align: center;
+    min-width: 86px;
+    border: 1px solid var(--line);
+  }
+  .counter .num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .counter .label{
+    font-size: 10.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+  .counter.action{ border-color: rgba(229,72,77,0.4); }
+  .counter.action .num{ color: var(--tier-action); }
+  .counter.monitor{ border-color: rgba(242,163,61,0.35); }
+  .counter.monitor .num{ color: var(--tier-monitor); }
+  .counter.noise{ border-color: var(--line); }
+  .counter.noise .num{ color: var(--text-faint); }
+
+  /* ===== Layout ===== */
+  .layout{
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: 1fr auto;
+    gap: 1px;
+    background: var(--line);
+    min-height: calc(100vh - 132px);
+  }
+  .feed{
+    background: var(--bg);
+    padding: 18px 24px;
+    overflow-y: auto;
+  }
+  .feed-section{
+    margin-bottom: 22px;
+  }
+  .feed-section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .feed-section-title .pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+  }
+  .pill.action{ background: var(--tier-action-bg); color: var(--tier-action); }
+  .pill.monitor{ background: var(--tier-monitor-bg); color: var(--tier-monitor); }
+  .pill.noise{ background: var(--tier-noise-bg); color: var(--text-dim); }
+
+  .feed-section-title.action-title{ color: var(--tier-action); }
+  .feed-section-title.monitor-title{ color: var(--tier-monitor); }
+  .feed-section-title.noise-title{ color: var(--text-faint); }
+
+  /* Alarm cards */
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: default;
+    transition: border-color 0.15s ease;
+  }
+  .card.selected{
+    border-color: var(--accent);
+    background: var(--panel-2);
+  }
+  .card.action{ border-left-color: var(--tier-action); }
+  .card.monitor{ border-left-color: var(--tier-monitor); }
+  .card.noise{ border-left-color: var(--tier-noise); opacity: 0.7; }
+
+  .card-main{ flex: 1; min-width: 0; }
+  .card-title{
+    font-weight: 600;
+    font-size: 13.5px;
+    margin-bottom: 3px;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .card-title .grouped{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 7px;
+  }
+  .card-meta{
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .card-meta span{ margin-right: 14px; }
+  .card-side{
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .card-time{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .card-badge{
+    display:inline-block;
+    margin-top: 6px;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .card-badge.action{ background: var(--tier-action-bg); color: var(--tier-action); }
+  .card-badge.monitor{ background: var(--tier-monitor-bg); color: var(--tier-monitor); }
+  .card-badge.noise{ background: var(--tier-noise-bg); color: var(--text-dim); }
+
+  /* ===== Right panel: history ===== */
+  .history{
+    background: var(--panel);
+    padding: 18px 18px;
+    border-left: 1px solid var(--line);
+    overflow-y: auto;
+  }
+  .panel-title{
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .panel-sub{
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .history-stat-row{
+    display:flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .history-stat{
+    flex:1;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px;
+    text-align:center;
+  }
+  .history-stat .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .history-stat .label{
+    font-size: 10.5px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .history-list{
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .history-item{
+    border-left: 2px solid var(--line);
+    padding-left: 10px;
+  }
+  .history-item .date{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .history-item .desc{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .reco-box{
+    background: rgba(79,140,255,0.06);
+    border: 1px solid rgba(79,140,255,0.25);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .reco-box .reco-label{
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* ===== Bottom handoff panel ===== */
+  .handoff{
+    grid-column: 1 / -1;
+    background: var(--panel);
+    border-top: 1px solid var(--line);
+    padding: 16px 24px;
+  }
+  .handoff-head{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .handoff-head .panel-title{ margin-bottom: 0; }
+  .handoff-head .shift-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 3px 9px;
+  }
+  .handoff-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .handoff-item{
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .handoff-item .ho-title{
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .handoff-item .ho-meta{
+    font-size: 11.5px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ho-status{
+    display:inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+  }
+  .ho-status.open{ background: var(--tier-action-bg); color: var(--tier-action); }
+  .ho-status.watch{ background: var(--tier-monitor-bg); color: var(--tier-monitor); }
+  .ho-status.resolved{ background: rgba(82,196,140,0.12); color: #52C48C; }
+
+  @media (max-width: 900px){
+    .layout{ grid-template-columns: 1fr; }
+    .history{ border-left:none; border-top: 1px solid var(--line); }
+    .handoff-grid{ grid-template-columns: 1fr; }
+    .counters{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="banner">
+    <div>
+      <h1>Concept mockup — NOC Incident Dashboard redesign</h1>
+      <p>Illustrative layout for the case study "Reducing Alert Fatigue." Built around tiering, alarm grouping, history context, and a structured shift handoff.</p>
+    </div>
+    <div class="tag">PRODUCT CASE STUDY · WIREFRAME</div>
+  </div>
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> NETOPS CONSOLE</div>
+    <div class="filters">
+      <div class="chip active">Severity: All <span class="arrow">▾</span></div>
+      <div class="chip">Site: All sites <span class="arrow">▾</span></div>
+      <div class="chip">Time range: Last 8h <span class="arrow">▾</span></div>
+      <div class="chip">Shift: B · 14:00–22:00 <span class="arrow">▾</span></div>
+    </div>
+    <div class="counters">
+      <div class="counter action">
+        <div class="num">3</div>
+        <div class="label">Action</div>
+      </div>
+      <div class="counter monitor">
+        <div class="num">7</div>
+        <div class="label">Monitor</div>
+      </div>
+      <div class="counter noise">
+        <div class="num">42</div>
+        <div class="label">Noise</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="feed">
+
+      <div class="feed-section">
+        <div class="feed-section-title action-title">
+          Action required <span class="pill action">3 alarms</span>
+        </div>
+
+        <div class="card action selected">
+          <div class="card-main">
+            <div class="card-title">
+              Site JBP-014 — Link Down (Fiber)
+            </div>
+            <div class="card-meta">
+              <span>Cell: JBP-014-A</span>
+              <span>Region: Jabalpur Zone 2</span>
+              <span>Duration: 00:04:12</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">14:42:08</div>
+            <div class="card-badge action">New</div>
+          </div>
+        </div>
+
+        <div class="card action">
+          <div class="card-main">
+            <div class="card-title">
+              Site JBP-027 — High Temperature (Shelter)
+            </div>
+            <div class="card-meta">
+              <span>Cell: JBP-027-C</span>
+              <span>Region: Jabalpur Zone 1</span>
+              <span>Duration: 00:11:47</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">14:34:21</div>
+            <div class="card-badge action">SLA: 18m left</div>
+          </div>
+        </div>
+
+        <div class="card action">
+          <div class="card-main">
+            <div class="card-title">
+              Site KTN-008 — Backhaul Packet Loss > 5%
+            </div>
+            <div class="card-meta">
+              <span>Cell: KTN-008-B</span>
+              <span>Region: Katni</span>
+              <span>Duration: 00:02:55</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">14:43:30</div>
+            <div class="card-badge action">New</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feed-section">
+        <div class="feed-section-title monitor-title">
+          Monitor <span class="pill monitor">7 alarms · 3 groups</span>
+        </div>
+
+        <div class="card monitor">
+          <div class="card-main">
+            <div class="card-title">
+              Site JBP-031 — CPU Utilization > 80%
+              <span class="grouped">4 related alarms</span>
+            </div>
+            <div class="card-meta">
+              <span>Cell: JBP-031-A/B/C/D</span>
+              <span>Region: Jabalpur Zone 3</span>
+              <span>Flapping: 6x in 30m</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">14:21:09</div>
+            <div class="card-badge monitor">Recurring</div>
+          </div>
+        </div>
+
+        <div class="card monitor">
+          <div class="card-main">
+            <div class="card-title">
+              Site SGR-003 — Power Fluctuation
+              <span class="grouped">2 related alarms</span>
+            </div>
+            <div class="card-meta">
+              <span>Cell: SGR-003-A</span>
+              <span>Region: Seoni Road</span>
+              <span>Flapping: 3x in 1h</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">14:05:54</div>
+            <div class="card-badge monitor">Watching</div>
+          </div>
+        </div>
+
+        <div class="card monitor">
+          <div class="card-main">
+            <div class="card-title">
+              Site JBP-019 — VSWR Threshold Warning
+            </div>
+            <div class="card-meta">
+              <span>Cell: JBP-019-B</span>
+              <span>Region: Jabalpur Zone 2</span>
+              <span>Duration: 00:42:10</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">14:00:01</div>
+            <div class="card-badge monitor">Watching</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feed-section">
+        <div class="feed-section-title noise-title">
+          Likely noise — auto-deprioritized <span class="pill noise">42 alarms · 6 groups</span>
+        </div>
+
+        <div class="card noise">
+          <div class="card-main">
+            <div class="card-title">
+              Site JBP-002 — Voltage Spike (Self-resolved)
+              <span class="grouped">18 occurrences / 30d</span>
+            </div>
+            <div class="card-meta">
+              <span>Cell: JBP-002-A</span>
+              <span>Avg duration: 00:00:45</span>
+              <span>Auto-resolved: 100%</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">13:58:02</div>
+            <div class="card-badge noise">Noise</div>
+          </div>
+        </div>
+
+        <div class="card noise">
+          <div class="card-main">
+            <div class="card-title">
+              Site JBP-009 — Link Flap (Microwave)
+              <span class="grouped">24 occurrences / 30d</span>
+            </div>
+            <div class="card-meta">
+              <span>Cell: JBP-009-C</span>
+              <span>Avg duration: 00:00:12</span>
+              <span>Auto-resolved: 98%</span>
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="card-time">13:51:44</div>
+            <div class="card-badge noise">Noise</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="history">
+      <div class="panel-title">History &amp; context</div>
+      <div class="panel-sub">JBP-014-A · Link Down (Fiber)</div>
+
+      <div class="history-stat-row">
+        <div class="history-stat">
+          <div class="num">5</div>
+          <div class="label">In last 30d</div>
+        </div>
+        <div class="history-stat">
+          <div class="num">8m</div>
+          <div class="label">Avg MTTR</div>
+        </div>
+      </div>
+
+      <div class="panel-title">Past occurrences</div>
+      <div class="history-list">
+        <div class="history-item">
+          <div class="date">Jun 11, 03:14</div>
+          <div class="desc">Same fiber cut location. Resolved by field team — physical cable damage.</div>
+        </div>
+        <div class="history-item">
+          <div class="date">May 28, 19:02</div>
+          <div class="desc">Resolved via remote port reset on aggregation switch.</div>
+        </div>
+        <div class="history-item">
+          <div class="date">May 19, 09:47</div>
+          <div class="desc">Field team replaced damaged patch cord at JBP-014 shelter.</div>
+        </div>
+      </div>
+
+      <div class="reco-box">
+        <div class="reco-label">Suggested next step</div>
+        2 of last 3 occurrences required a field visit. Recommend dispatching field team to JBP-014 alongside remote diagnostics.
+      </div>
+    </div>
+
+    <div class="handoff">
+      <div class="handoff-head">
+        <div class="panel-title">Shift handoff log</div>
+        <div class="shift-tag">Shift B → Shift C · Carries forward automatically</div>
+      </div>
+      <div class="handoff-grid">
+        <div class="handoff-item">
+          <div class="ho-title">JBP-014 — Link Down <span class="ho-status open">Open</span></div>
+          <div class="ho-meta">Field team dispatched 14:48 · ETA 45m</div>
+        </div>
+        <div class="handoff-item">
+          <div class="ho-title">JBP-027 — High Temp <span class="ho-status watch">Watch</span></div>
+          <div class="ho-meta">Cooling unit restarted · monitoring for re-trigger</div>
+        </div>
+        <div class="handoff-item">
+          <div class="ho-title">SGR-003 — Power Fluctuation <span class="ho-status resolved">Resolved</span></div>
+          <div class="ho-meta">Confirmed stable for 2h · no further action</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
