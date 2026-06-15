@@ -2,7 +2,7 @@
 
 This repo hosts my product management portfolio as I transition from telecom NOC engineering into Product Management.
 
-🔗 **Live site:** https://therealshub.github.io/portfolio/
+🔗 **Live site:** [https://therealshub.github.io/Shantanu-pm-porfolio/)
 
 ## What's here
 
