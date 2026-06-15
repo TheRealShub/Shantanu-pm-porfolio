@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shantanu Mishra — Product Management Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0F14;
+    --panel: #121822;
+    --panel-2: #161D29;
+    --line: #232C3A;
+    --text: #E6EAF0;
+    --text-dim: #8A96A8;
+    --text-faint: #5C6779;
+    --accent: #4F8CFF;
+    --good: #52C48C;
+    --warn: #F2A33D;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family:'Inter', sans-serif;
+    line-height: 1.6;
+  }
+
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  a{ color: var(--accent); text-decoration:none; }
+  a:hover{ text-decoration: underline; }
+
+  .wrap{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Status bar ===== */
+  .statusbar{
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--line);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 10px 0;
+  }
+  .statusbar .wrap{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .statusbar .dot{
+    display:inline-block;
+    width:7px; height:7px; border-radius:50%;
+    background: var(--good);
+    margin-right: 7px;
+    box-shadow: 0 0 0 3px rgba(82,196,140,0.18);
+  }
+
+  /* ===== Hero ===== */
+  header.hero{
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1.name{
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .tagline{
+    font-size: 17px;
+    color: var(--text-dim);
+    max-width: 560px;
+    margin-bottom: 28px;
+  }
+  .contact-row{
+    display:flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 13.5px;
+    font-family:'JetBrains Mono', monospace;
+    color: var(--text-dim);
+  }
+  .contact-row a{ color: var(--text); }
+  .contact-row a:hover{ color: var(--accent); }
+
+  /* ===== Sections ===== */
+  section{
+    padding: 56px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  section:last-of-type{ border-bottom:none; }
+
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+  .section-title{
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  /* ===== Summary ===== */
+  .summary-text{
+    font-size: 15.5px;
+    color: var(--text-dim);
+    max-width: 680px;
+  }
+
+  /* ===== Experience ===== */
+  .job{
+    margin-bottom: 32px;
+    padding-left: 20px;
+    border-left: 2px solid var(--line);
+    position: relative;
+  }
+  .job::before{
+    content:'';
+    position:absolute;
+    left:-5px; top:4px;
+    width:8px; height:8px;
+    border-radius:50%;
+    background: var(--accent);
+  }
+  .job:last-child{ margin-bottom:0; }
+  .job-head{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .job-title{ font-size: 16px; font-weight: 700; }
+  .job-date{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-faint);
+  }
+  .job-org{
+    font-size: 13.5px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .job ul{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .job li{
+    font-size: 14px;
+    color: var(--text-dim);
+    padding-left: 18px;
+    position: relative;
+  }
+  .job li::before{
+    content:'→';
+    position:absolute;
+    left:0;
+    color: var(--accent);
+  }
+  .job li b{ color: var(--text); font-weight:600; }
+
+  /* ===== Skills ===== */
+  .skill-groups{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .skill-group-title{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .tag-row{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag{
+    font-size: 12.5px;
+    font-family:'JetBrains Mono', monospace;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: var(--text-dim);
+  }
+
+  /* ===== Projects ===== */
+  .project-card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .project-head{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .project-title{ font-size: 17px; font-weight: 700; }
+  .project-status{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 9px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .project-status.live{ background: rgba(82,196,140,0.12); color: var(--good); }
+  .project-status.draft{ background: rgba(242,163,61,0.12); color: var(--warn); }
+
+  .project-desc{
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .project-links{
+    display:flex;
+    gap: 16px;
+    font-size: 13px;
+    font-family:'JetBrains Mono', monospace;
+  }
+  .project-links a::before{ content: '↗ '; }
+
+  .preview-frame{
+    margin-top: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0B0F14;
+  }
+  .preview-frame iframe{
+    width: 100%;
+    height: 360px;
+    border: none;
+    display:block;
+  }
+  .preview-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    padding: 8px 12px;
+    border-top: 1px solid var(--line);
+    background: var(--panel-2);
+  }
+
+  /* ===== Certifications ===== */
+  .cert-list{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .cert-item{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13.5px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .cert-item .check{
+    color: var(--good);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  /* ===== Footer ===== */
+  footer{
+    padding: 40px 0 60px;
+    text-align:center;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 600px){
+    h1.name{ font-size: 32px; }
+    .preview-frame iframe{ height: 280px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="statusbar">
+    <div class="wrap">
+      <div><span class="dot"></span>STATUS: Open to Junior / Associate Product Manager roles</div>
+      <div>BASE: Jabalpur, M.P. (Remote-friendly)</div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Product Management Portfolio</div>
+      <h1 class="name">Shantanu Mishra</h1>
+      <p class="tagline">B.Tech (CSE) graduate transitioning from telecom NOC engineering into Product Management — bringing hands-on experience with live infrastructure monitoring, incident prioritization, and SLA-driven operations into product thinking.</p>
+      <div class="contact-row">
+        <a href="mailto:Shantanum2002@gmail.com">Shantanum2002@gmail.com</a>
+        <span>8085706783</span>
+        <a href="https://linkedin.com/in/realshub" target="_blank">linkedin.com/in/realshub</a>
+        <a href="https://github.com/TheRealShub" target="_blank">github.com/TheRealShub</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="summary">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <span class="section-title">Summary</span>
+      </div>
+      <p class="summary-text">
+        I spent over a year monitoring live telecom infrastructure for a large enterprise client (Reliance Jio), working rotating shifts with a 5-person NOC team. That meant constantly triaging alarms, deciding what's urgent versus noise, and coordinating fixes under strict SLA deadlines. I'm now applying that same instinct — separating signal from noise, prioritizing by impact, and communicating clearly across teams — to Product Management, with a particular interest in tools built for technical and operations teams.
+      </p>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <span class="section-title">Experience</span>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div class="job-title">OMCR (Operations &amp; Maintenance Center – Radio) Engineer</div>
+          <div class="job-date">06/2024 – 12/2025</div>
+        </div>
+        <div class="job-org">GSP Power Solutions · Client: Reliance Jio Infocomm Ltd. · Jabalpur, M.P.</div>
+        <ul>
+          <li><b>Reliability monitoring:</b> Tracked live performance of high-scale telecom infrastructure around the clock, identifying anomalies that helped maintain 99.9% network uptime.</li>
+          <li><b>Incident triage:</b> Assessed severity and impact of real-time alerts to prioritize fixes and meet strict SLA deadlines — core prioritization muscle for product work.</li>
+          <li><b>Cross-team coordination:</b> Worked across engineering and field teams to resolve degradation issues, communicating status under time pressure.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div class="job-title">Cybersecurity Virtual Intern</div>
+          <div class="job-date">05/2024 – 07/2024</div>
+        </div>
+        <div class="job-org">Cisco AICTE Virtual Internship Program · Remote</div>
+        <ul>
+          <li><b>Network fundamentals:</b> Completed a structured program on routing, switching, network security architecture, and threat mitigation.</li>
+          <li><b>Risk translation:</b> Analyzed vulnerabilities and configured firewalls/ACLs — translating technical risk into actionable steps.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <span class="section-title">Skills</span>
+      </div>
+      <div class="skill-groups">
+        <div>
+          <div class="skill-group-title">Product &amp; Process</div>
+          <div class="tag-row">
+            <span class="tag">Prioritization</span>
+            <span class="tag">Incident Triage</span>
+            <span class="tag">ITSM</span>
+            <span class="tag">Agile / JIRA</span>
+            <span class="tag">Stakeholder Comms</span>
+          </div>
+        </div>
+        <div>
+          <div class="skill-group-title">Technical Foundation</div>
+          <div class="tag-row">
+            <span class="tag">MySQL</span>
+            <span class="tag">Linux</span>
+            <span class="tag">Unix</span>
+            <span class="tag">HTML / CSS</span>
+            <span class="tag">AWS</span>
+            <span class="tag">Azure</span>
+            <span class="tag">CCNA</span>
+          </div>
+        </div>
+        <div>
+          <div class="skill-group-title">Tools</div>
+          <div class="tag-row">
+            <span class="tag">JIRA</span>
+            <span class="tag">ServiceNow</span>
+            <span class="tag">Zabbix</span>
+            <span class="tag">Packet Tracer</span>
+            <span class="tag">APM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <span class="section-title">Product Case Studies</span>
+      </div>
+
+      <div class="project-card">
+        <div class="project-head">
+          <div class="project-title">Reducing Alert Fatigue: NOC Incident Dashboard Redesign</div>
+          <div class="project-status live">Case Study + Mockup</div>
+        </div>
+        <p class="project-desc">
+          A product case study grounded in real NOC experience — covering the alert-fatigue problem on Zabbix, user research across a 5-person shift team, a redesigned dashboard with severity tiering and alarm grouping, a built-in shift handoff log, and success metrics like MTTA and handoff completion rate.
+        </p>
+        <div class="project-links">
+          <a href="NOC_Dashboard_Case_Study.docx" target="_blank">Read full case study (.docx)</a>
+          <a href="noc_dashboard_mockup.html" target="_blank">Open interactive mockup</a>
+        </div>
+        <div class="preview-frame">
+          <iframe src="noc_dashboard_mockup.html" loading="lazy" title="NOC Dashboard mockup preview"></iframe>
+          <div class="preview-label">Live preview — embedded dashboard mockup</div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-head">
+          <div class="project-title">Feature Teardown &amp; PRD — Consumer App</div>
+          <div class="project-status draft">In Progress</div>
+        </div>
+        <p class="project-desc">
+          A one-page PRD for a feature improvement on a consumer app — problem statement, user stories, and success metrics. Coming soon.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="certifications">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <span class="section-title">Certifications</span>
+      </div>
+      <div class="cert-list">
+        <div class="cert-item"><span class="check">✓</span> CCNA — Cisco Networking Academy</div>
+        <div class="cert-item"><span class="check">✓</span> CyberOps Associate — Cisco</div>
+        <div class="cert-item"><span class="check">✓</span> Programming Essentials in Python — Cisco</div>
+        <div class="cert-item"><span class="check">✓</span> Tableau — The Forage</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Shantanu Mishra · Jabalpur, M.P. · Last updated June 2026
+  </footer>
+
+</body>
+</html>
